@@ -6,6 +6,7 @@ defmodule Sennen do
   def start do
     generate_n_locations(@number_of_locations)
     |> fetch_stats()
+    |> filter_invalid_stats()
     |> IO.inspect()
   end
 
@@ -34,4 +35,11 @@ defmodule Sennen do
         {:error}
     end
   end
+
+  defp filter_invalid_stats(stats) do
+    Enum.filter(stats, &is_valid_stat/1)
+  end
+
+  defp is_valid_stat(%{"day_length" => day_length}), do: day_length > 0
+  defp is_valid_stat(_), do: false
 end
