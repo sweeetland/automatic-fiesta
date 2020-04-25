@@ -8,7 +8,7 @@ defmodule Sennen do
     |> fetch_stats()
     |> filter_invalid_stats()
     |> sort_by_earliest_sunrise
-    |> IO.inspect()
+    |> print_summary_message()
   end
 
   defp generate_n_locations(n) do
@@ -54,5 +54,11 @@ defmodule Sennen do
         _ -> true
       end
     end)
+  end
+
+  defp print_summary_message([head | _tail]) do
+    IO.puts(
+      "The earliest sunrise was at #{head["sunrise"]} with a day length of #{head["day_length"]}"
+    )
   end
 end
