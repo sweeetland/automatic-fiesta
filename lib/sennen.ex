@@ -7,6 +7,7 @@ defmodule Sennen do
     generate_n_locations(@number_of_locations)
     |> fetch_stats()
     |> filter_invalid_stats()
+    |> sort_by_earliest_sunrise
     |> IO.inspect()
   end
 
@@ -42,4 +43,16 @@ defmodule Sennen do
 
   defp is_valid_stat(%{"day_length" => day_length}), do: day_length > 0
   defp is_valid_stat(_), do: false
+
+  defp sort_by_earliest_sunrise(stats) do
+    Enum.sort(stats, fn a, b ->
+      {:ok, a_sunrise, _} = DateTime.from_iso8601(a["sunrise"])
+      {:ok, b_sunrise, _} = DateTime.from_iso8601(b["sunrise"])
+
+      case DateTime.compare(a_sunrise, b_sunrise) do
+        :gt -> false
+        _ -> true
+      end
+    end)
+  end
 end
